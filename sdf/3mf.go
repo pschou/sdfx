@@ -60,20 +60,20 @@ func Save3MF(path string, mesh []*Triangle3) error {
 			vertices[v] = len(vertices)
 		}
 	}
-	outputVertices = make([]ThreeMFVertex, len(vertices))
+	outputVertices := make([]ThreeMFVertex, len(vertices))
 	for v, i := range vertices {
 		outputVertices[i] = ThreeMFVertex{X: v.X, Y: v.Y, Z: v.Z}
 	}
 
 	// TODO: Make this more memory-efficient while encoding
-	outputTriangles = make([]ThreeMFTriangle, len(mesh))
+	outputTriangles := make([]ThreeMFTriangle, len(mesh))
 	for i, t := range mesh {
 		outputTriangles[i].V1 = vertices[t.V[0]]
 		outputTriangles[i].V2 = vertices[t.V[1]]
 		outputTriangles[i].V3 = vertices[t.V[2]]
 	}
 
-	return xml.NewEncoder(file).Encode(ThreeMFObject{
+	return xml.NewEncoder(file).Encode(ThreeMFModel{
 		Lang:   "en-US",
 		Schema: "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
 		Unit:   "mm",
