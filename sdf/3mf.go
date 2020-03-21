@@ -57,6 +57,9 @@ func Save3MF(path string, mesh []*Triangle3) error {
 	vertices := map[V3]int{}
 	for _, t := range mesh {
 		for _, v := range t.V {
+			if _, isDuplicate := vertices[v]; isDuplicate {
+				continue
+			}
 			vertices[v] = len(vertices)
 		}
 	}
