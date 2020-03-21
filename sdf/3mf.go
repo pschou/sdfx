@@ -1,7 +1,9 @@
 package sdf
 
 import (
+	"bufio"
 	"encoding/xml"
+	"fmt"
 	"os"
 )
 
@@ -9,12 +11,13 @@ import (
 
 // ThreeMFModel top level structure of a model for output to 3mf
 type ThreeMFModel struct {
-	XMLName   xml.Name        `xml:"model"`
-	Lang      string          `xml:"xml:lang,attr"`
-	Schema    string          `xml:"xmlns,attr"`
-	Unit      string          `xml:"unit,attr"`
-	Resources []ThreeMFObject `xml:"resources"`
-	Build     []ThreeMFItem   `xml:"build"`
+	XMLName xml.Name `xml:"model"`
+	Lang    string   `xml:"xml:lang,attr"`
+	Schema  string   `xml:"xmlns,attr"`
+	Unit    string   `xml:"unit,attr"`
+	// These aren't grouping into the array field
+	Resources []ThreeMFObject `xml:"resources>object"`
+	Build     []ThreeMFItem   `xml:"build>item"`
 }
 
 type ThreeMFObject struct {
@@ -81,7 +84,9 @@ func Save3MF(path string, mesh []*Triangle3) error {
 		outputTriangles[i].V3 = vertices[t.V[2]]
 	}
 
-	return xml.NewEncoder(file).Encode(ThreeMFModel{
+	buf := bufio.NewWriter(file)
+	fmt.Fprintln(buf, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+	err = xml.NewEncoder(buf).Encode(ThreeMFModel{
 		Lang:   "en-US",
 		Schema: "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
 		Unit:   "mm",
@@ -95,6 +100,10 @@ func Save3MF(path string, mesh []*Triangle3) error {
 			{ObjectID: "1"},
 		},
 	})
+	if err != nil {
+		return err
+	}
+	return buf.Flush()
 }
 
 //-----------------------------------------------------------------------------
