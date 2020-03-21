@@ -9,38 +9,43 @@ import (
 
 // ThreeMFModel top level structure of a model for output to 3mf
 type ThreeMFModel struct {
-	Lang      string          `xml:xml:lang,attr`
-	Schema    string          `xml:xmlns,attr`
-	Unit      string          `xml:unit,attr`
-	Resources []ThreeMFObject `xml:resources`
-	Build     []ThreeMFItem   `xml:build`
+	XMLName   xml.Name        `xml:"model"`
+	Lang      string          `xml:"xml:lang,attr"`
+	Schema    string          `xml:"xmlns,attr"`
+	Unit      string          `xml:"unit,attr"`
+	Resources []ThreeMFObject `xml:"resources"`
+	Build     []ThreeMFItem   `xml:"build"`
 }
 
 type ThreeMFObject struct {
-	ID   string      `xml:id,attr`
-	Type string      `xml:type,attr`
-	Mesh ThreeMFMesh `xml:mesh`
+	XMLName xml.Name    `xml:"object"`
+	ID      string      `xml:"id,attr"`
+	Type    string      `xml:"type,attr"`
+	Mesh    ThreeMFMesh `xml:"mesh"`
 }
 
 type ThreeMFMesh struct {
-	Vertices  []ThreeMFVertex   `xml:vertices`
-	Triangles []ThreeMFTriangle `xml:triangles`
+	Vertices  []ThreeMFVertex   `xml:"vertices"`
+	Triangles []ThreeMFTriangle `xml:"triangles"`
 }
 
 type ThreeMFVertex struct {
-	X float64 `xml:x,attr`
-	Y float64 `xml:y,attr`
-	Z float64 `xml:z,attr`
+	XMLName xml.Name `xml:"vertex"`
+	X       float64  `xml:"x,attr"`
+	Y       float64  `xml:"y,attr"`
+	Z       float64  `xml:"z,attr"`
 }
 
 type ThreeMFTriangle struct {
-	V1 int `xml:v1,attr`
-	V2 int `xml:v2,attr`
-	V3 int `xml:v3,attr`
+	XMLName xml.Name `xml:"triangle"`
+	V1      int      `xml:"v1,attr"`
+	V2      int      `xml:"v2,attr"`
+	V3      int      `xml:"v3,attr"`
 }
 
 type ThreeMFItem struct {
-	ObjectID string `xml:objectid,attr`
+	XMLName  xml.Name `xml:"item"`
+	ObjectID string   `xml:"objectid,attr"`
 }
 
 //-----------------------------------------------------------------------------
