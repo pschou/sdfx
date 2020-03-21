@@ -74,7 +74,6 @@ func RenderSlow(
 	meshInc := bb0Size.MaxComponent() / float64(meshCells)
 	bb1Size := bb0Size.DivScalar(meshInc)
 	bb1Size = bb1Size.Ceil().AddScalar(1)
-	cells := bb1Size.ToV3i()
 	bb1Size = bb1Size.MulScalar(meshInc)
 	bb := NewBox3(bb0.Center(), bb1Size)
 
