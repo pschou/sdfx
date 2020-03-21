@@ -56,6 +56,18 @@ func RenderSTLSlow(
 	meshCells int, //number of cells on the longest axis. e.g 200
 	path string, //path to filename
 ) {
+	m := RenderSlow(s, meshCells)
+	err := SaveSTL(path, m)
+	if err != nil {
+		fmt.Printf("%s", err)
+	}
+}
+
+// RenderSlow renders an SDF3 as an mesh (uses uniform grid sampling).
+func RenderSlow(
+	s SDF3, //sdf3 to render
+	meshCells int, //number of cells on the longest axis. e.g 200
+) []*Triangle3 {
 	// work out the region we will sample
 	bb0 := s.BoundingBox()
 	bb0Size := bb0.Size()
@@ -66,14 +78,8 @@ func RenderSTLSlow(
 	bb1Size = bb1Size.MulScalar(meshInc)
 	bb := NewBox3(bb0.Center(), bb1Size)
 
-	fmt.Printf("rendering %s (%dx%dx%d)\n", path, cells[0], cells[1], cells[2])
-
 	// run marching cubes to generate the triangle mesh
-	m := marchingCubes(s, bb, meshInc)
-	err := SaveSTL(path, m)
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
+	return marchingCubes(s, bb, meshInc)
 }
 
 //-----------------------------------------------------------------------------
